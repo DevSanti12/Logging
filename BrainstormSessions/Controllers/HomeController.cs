@@ -6,25 +6,19 @@ using BrainstormSessions.Core.Interfaces;
 using BrainstormSessions.Core.Model;
 using BrainstormSessions.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-//using Microsoft.Extensions.Logging;
 using Serilog;
-//using log4net;
 
 namespace BrainstormSessions.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IBrainstormSessionRepository _sessionRepository;
-        //private readonly Serilog.ILogger _logger;
         private readonly ILogger _logger;
 
         public HomeController(IBrainstormSessionRepository sessionRepository, ILogger logger)
         {
             _sessionRepository = sessionRepository;
             _logger = logger; // Use the DI-provided, global logger
-            //_logger = new LoggerConfiguration()
-            //    .WriteTo.Log4Net() // Redirect logs to Log4Net
-            //    .CreateLogger();
         }
 
         public async Task<IActionResult> Index()

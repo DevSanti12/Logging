@@ -9,18 +9,13 @@ namespace BrainstormSessions.Controllers
     public class SessionController : Controller
     {
         private readonly IBrainstormSessionRepository _sessionRepository;
-        //private static readonly ILog _logger = LogManager.GetLogger(typeof(HomeController));
-        //private readonly Serilog.ILogger _logger;
         private readonly ILogger _logger;
 
         public SessionController(IBrainstormSessionRepository sessionRepository, ILogger logger)
         {
             _sessionRepository = sessionRepository;
             _logger = logger; // Use shared logger provided by DI
-            //_logger = new LoggerConfiguration()
-            //    .MinimumLevel.Debug() // Enable DEBUG level and above
-            //    .WriteTo.Log4Net() // Redirect logs to Log4Net
-            //    .CreateLogger();
+
         }
 
         public async Task<IActionResult> Index(int? id)

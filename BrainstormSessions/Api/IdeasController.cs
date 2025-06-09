@@ -13,16 +13,12 @@ namespace BrainstormSessions.Api
     public class IdeasController : ControllerBase
     {
         private readonly IBrainstormSessionRepository _sessionRepository;
-        //private readonly Serilog.ILogger _logger;
         private readonly ILogger _logger;
 
         public IdeasController(IBrainstormSessionRepository sessionRepository, ILogger logger)
         {
             _sessionRepository = sessionRepository;
             _logger = logger;
-            //_logger = new LoggerConfiguration()
-            //    .WriteTo.Log4Net() // Redirect logs to Log4Net
-            //    .CreateLogger();
         }
 
         #region snippet_ForSessionAndCreate
@@ -108,7 +104,7 @@ namespace BrainstormSessions.Api
         {
             if (!ModelState.IsValid)
             {
-                _logger.Error("Expected Error messages in the logs");
+                _logger.Error("Error requesting Ideas Controller");
                 return BadRequest(ModelState);
             }
 
