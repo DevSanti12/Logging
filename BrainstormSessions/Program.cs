@@ -15,51 +15,33 @@ namespace BrainstormSessions
     {
         public static void Main(string[] args)
         {
-            var logRepository = LogManager.GetRepository(System.Reflection.Assembly.GetExecutingAssembly());
-            XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
-            CreateHostBuilder(args).Build().Run();
-            //Log.Logger = new LoggerConfiguration()
-            //    .WriteTo.Console()
-            //    .WriteTo.File(new JsonFormatter(), @"c:\temp\brainstormSession.log",
-            //                    shared: true)
-            //    .CreateLogger();
+            // Configure Serilog globally
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug() // Log Debug and above
+                .WriteTo.Console()    // Writes logs to console for development convenience
+                .WriteTo.File("Logs/log-.txt",  // Writes logs to rolling files daily
+                    rollingInterval: RollingInterval.Day,
+                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Debug)
+                .CreateLogger();
 
-            //try
-            //{
-            //    Log.Information("Starting web application");
-
-            //    var builder = WebApplication.CreateBuilder(args);
-            //    builder.Services.AddSerilog(); // <-- Add this line
-
-            //    var app = builder.Build();
-            //    app.MapGet("/", () => "Hello World!");
-
-            //    app.Run();
-            //}
-            //catch (Exception ex)
-            //{
-            //    Log.Fatal(ex, "Application terminated unexpectedly");
-            //}
-            //finally
-            //{
-            //    Log.CloseAndFlush();
-            //}
+            try
+            {
+                Log.Information("Starting the application...");
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Application terminated unexpectedly!");
+            }
+            finally
+            {
+                Log.CloseAndFlush(); // Ensure all queued logs are flushed
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-             .ConfigureServices((hostContext, services) =>
-             {
-                 // Load log4net configuration from log4net.config file
-                 XmlConfigurator.Configure(new FileInfo("log4net.config"));
-
-                 // Register Log4Net to be used with ASP.NET logging
-                 Log.Logger = new LoggerConfiguration()
-                     .WriteTo.Log4Net() // Forward Serilog logs to Log4Net
-                     .CreateLogger();
-
-                 services.AddSingleton(Log.Logger); // Add logger to DI if needed
-             })
+                .UseSerilog() // Hook Serilog into ASP.NET Core's logging system
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
