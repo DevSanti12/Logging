@@ -7,16 +7,15 @@ using BrainstormSessions.Core.Model;
 using BrainstormSessions.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
-using Serilog.Sinks.EmailPickup;
 
 namespace BrainstormSessions.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IBrainstormSessionRepository _sessionRepository;
-        private readonly Serilog.ILogger _logger;
+        private readonly ILogger _logger;
 
-        public HomeController(IBrainstormSessionRepository sessionRepository, Serilog.ILogger logger)
+        public HomeController(IBrainstormSessionRepository sessionRepository, ILogger logger)
         {
             _sessionRepository = sessionRepository;
             _logger = logger; // Use the DI-provided, global logger

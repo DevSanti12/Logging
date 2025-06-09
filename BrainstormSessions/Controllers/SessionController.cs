@@ -9,9 +9,9 @@ namespace BrainstormSessions.Controllers
     public class SessionController : Controller
     {
         private readonly IBrainstormSessionRepository _sessionRepository;
-        private readonly Serilog.ILogger _logger;
+        private readonly ILogger _logger;
 
-        public SessionController(IBrainstormSessionRepository sessionRepository, Serilog.ILogger logger)
+        public SessionController(IBrainstormSessionRepository sessionRepository, ILogger logger)
         {
             _sessionRepository = sessionRepository;
             _logger = logger; // Use shared logger provided by DI

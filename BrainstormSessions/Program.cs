@@ -15,8 +15,6 @@ namespace BrainstormSessions
     {
         public static void Main(string[] args)
         {
-
-
             try
             {
                 Log.Logger = new LoggerConfiguration().
