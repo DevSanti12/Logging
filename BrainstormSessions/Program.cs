@@ -2,9 +2,12 @@ using System;
 using BrainstormSessions.Core.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Serilog;
-
+using Serilog.Sinks.EmailPickup;
 
 namespace BrainstormSessions
 {
@@ -12,34 +15,16 @@ namespace BrainstormSessions
     {
         public static void Main(string[] args)
         {
-            // Email sink configuration
-            var emailConnectionInfo = new EmailConnectionInfo
-            {
-                FromEmail = "santiago_leyva@epam.com",           // Sender email address
-                ToEmail = "santiagoleyva2013@gmail.com",       // Recipient email address
-                MailServer = "smtp.example.com",               // SMTP server address
-                NetworkCredentials = new System.Net.NetworkCredential
-                {
-                    UserName = "your_smtp_username",           // SMTP username
-                    Password = "your_smtp_password"            // SMTP password
-                },
-                EnableSsl = true,                              // Use SSL (secure connection)
-                Port = 587,                                    // SMTP port (587 is common)
-                EmailSubject = "Error Logs from BrainstormSessions" // Subject of the email
-            };
 
-            // Configure Serilog globally
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug() // Log Debug and above
-                .WriteTo.Console()    // Writes logs to console for development convenience
-                .WriteTo.File("Logs/log-.txt",  // Writes logs to rolling files daily
-                    rollingInterval: RollingInterval.Day,
-                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Debug)
-                .CreateLogger();
 
             try
             {
+                Log.Logger = new LoggerConfiguration().
+                    ReadFrom.Configuration(new ConfigurationBuilder().
+                        AddJsonFile("appsettings.json") //read from appsettings to configure logger
+                        .Build()).CreateLogger();
                 Log.Information("Starting the application...");
+                Log.Error("Testing email log creation in pickup folder...");
                 CreateHostBuilder(args).Build().Run();
             }
             catch (Exception ex)
@@ -55,6 +40,11 @@ namespace BrainstormSessions
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseSerilog() // Hook Serilog into ASP.NET Core's logging system
+                .ConfigureServices((context, services) =>
+                {
+                    // Register Serilog.ILogger globally
+                    services.AddSingleton(Log.Logger); // This ensures Serilog.ILogger can be injected
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

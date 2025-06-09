@@ -9,9 +9,9 @@ namespace BrainstormSessions.Controllers
     public class SessionController : Controller
     {
         private readonly IBrainstormSessionRepository _sessionRepository;
-        private readonly ILogger _logger;
+        private readonly Serilog.ILogger _logger;
 
-        public SessionController(IBrainstormSessionRepository sessionRepository, ILogger logger)
+        public SessionController(IBrainstormSessionRepository sessionRepository, Serilog.ILogger logger)
         {
             _sessionRepository = sessionRepository;
             _logger = logger; // Use shared logger provided by DI
@@ -40,7 +40,7 @@ namespace BrainstormSessions.Controllers
                 Id = session.Id
             };
 
-            _logger.Debug("Expected 2 Debug messages in the logs");
+            _logger.Debug("Succesful Session search");
             return View(viewModel);
         }
     }

@@ -13,9 +13,9 @@ namespace BrainstormSessions.Api
     public class IdeasController : ControllerBase
     {
         private readonly IBrainstormSessionRepository _sessionRepository;
-        private readonly ILogger _logger;
+        private readonly Serilog.ILogger _logger;
 
-        public IdeasController(IBrainstormSessionRepository sessionRepository, ILogger logger)
+        public IdeasController(IBrainstormSessionRepository sessionRepository, Serilog.ILogger logger)
         {
             _sessionRepository = sessionRepository;
             _logger = logger;

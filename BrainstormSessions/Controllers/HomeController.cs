@@ -7,15 +7,16 @@ using BrainstormSessions.Core.Model;
 using BrainstormSessions.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using Serilog.Sinks.EmailPickup;
 
 namespace BrainstormSessions.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IBrainstormSessionRepository _sessionRepository;
-        private readonly ILogger _logger;
+        private readonly Serilog.ILogger _logger;
 
-        public HomeController(IBrainstormSessionRepository sessionRepository, ILogger logger)
+        public HomeController(IBrainstormSessionRepository sessionRepository, Serilog.ILogger logger)
         {
             _sessionRepository = sessionRepository;
             _logger = logger; // Use the DI-provided, global logger
@@ -64,6 +65,11 @@ namespace BrainstormSessions.Controllers
                 _logger.Information("Successfully added new brainstorming session.");
             }
 
+
+            // Trigger an email via Serilog (you can use Error Level if you want to guarantee email delivery)
+            _logger.Error("A new session was created: {SessionName} at {Timestamp}.",
+                model.SessionName,
+                DateTimeOffset.Now);
             return RedirectToAction(actionName: nameof(Index));
         }
     }
