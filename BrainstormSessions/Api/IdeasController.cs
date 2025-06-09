@@ -53,6 +53,7 @@ namespace BrainstormSessions.Api
             var session = await _sessionRepository.GetByIdAsync(model.SessionId);
             if (session == null)
             {
+                _logger.Warning("Session not found!");
                 return NotFound(model.SessionId);
             }
 
@@ -66,6 +67,7 @@ namespace BrainstormSessions.Api
 
             await _sessionRepository.UpdateAsync(session);
 
+            _logger.Information("Session created succesfully!");
             return Ok(session);
         }
         #endregion
@@ -80,6 +82,7 @@ namespace BrainstormSessions.Api
 
             if (session == null)
             {
+                _logger.Warning("Session not found!");
                 return NotFound(sessionId);
             }
 
@@ -112,6 +115,7 @@ namespace BrainstormSessions.Api
 
             if (session == null)
             {
+                _logger.Warning("Session is null!");
                 return NotFound(model.SessionId);
             }
 

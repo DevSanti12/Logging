@@ -10,11 +10,8 @@ using log4net.Appender;
 using log4net.Config;
 using log4net.Core;
 using Moq;
-using Xunit;
 using Serilog;
-using Serilog.Sinks.InMemory;
-using log4net;
-using System.IO;
+using Xunit;
 
 namespace BrainstormSessions.Test.UnitTests
 {
