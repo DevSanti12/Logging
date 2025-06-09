@@ -1,13 +1,10 @@
-using Microsoft.AspNetCore.Builder;
 using System;
+using BrainstormSessions.Core.Model;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using Serilog.Formatting.Json;
-using log4net.Config;
-using Microsoft.Extensions.DependencyInjection;
-using System.IO;
-using log4net;
+
 
 namespace BrainstormSessions
 {
@@ -15,6 +12,22 @@ namespace BrainstormSessions
     {
         public static void Main(string[] args)
         {
+            // Email sink configuration
+            var emailConnectionInfo = new EmailConnectionInfo
+            {
+                FromEmail = "santiago_leyva@epam.com",           // Sender email address
+                ToEmail = "santiagoleyva2013@gmail.com",       // Recipient email address
+                MailServer = "smtp.example.com",               // SMTP server address
+                NetworkCredentials = new System.Net.NetworkCredential
+                {
+                    UserName = "your_smtp_username",           // SMTP username
+                    Password = "your_smtp_password"            // SMTP password
+                },
+                EnableSsl = true,                              // Use SSL (secure connection)
+                Port = 587,                                    // SMTP port (587 is common)
+                EmailSubject = "Error Logs from BrainstormSessions" // Subject of the email
+            };
+
             // Configure Serilog globally
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug() // Log Debug and above
